@@ -64,3 +64,6 @@ typings/
 artifacts
 tmp/
 dist
+
+# firebase
+.firebase
