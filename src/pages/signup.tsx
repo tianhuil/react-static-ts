@@ -1,14 +1,29 @@
 import React from 'react'
+import firebase from 'firebase'
 
+const firebaseConfig = {
+  // go to https://console.firebase.google.com/u/0/project/react-static-ts/overview
+  // click on the app -> settings
+  // and copy the javascript snippet
+};
+firebase.initializeApp(firebaseConfig)
 
 export default () => {
   const nameEl = React.useRef(null)
   const emailEl = React.useRef(null)
 
+  const db = firebase.firestore()
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
-    console.log(nameEl.current.value)
-    console.log(emailEl.current.value)
+    const email = emailEl.current.value
+    const name = nameEl.current.value
+
+    db.collection('signups').doc(email).set({
+      name,
+      email,
+    })
+    console.log({name, email})
   }
 
   return <div>
