@@ -61,6 +61,6 @@ typings/
 .next
 
 # react-static
-public/
 artifacts
 tmp/
+dist
