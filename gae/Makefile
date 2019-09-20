@@ -1,6 +1,4 @@
 SHELL=bash
-
-SHELL=bash
 include .env
 
 database:
