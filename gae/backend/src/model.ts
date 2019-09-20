@@ -21,9 +21,12 @@ export const ContactStore = {
     }
     return key.id;
   },
-  async list<T extends IContact>(token: string, limit: number): Promise<[T[], string | undefined]> {
-    const query = datastore.createQuery([kind])
-      .limit(limit);
+  async list<T extends IContact>(cursor: string | undefined, limit: number): Promise<[T[], string | undefined]> {
+    let query = datastore.createQuery([kind])
+                  .limit(limit);
+    if (cursor) {
+      query = query.start(cursor)
+    }
 
     const [results, info] = await datastore.runQuery(query);
     const nextCursor = (info.moreResults !== Datastore.NO_MORE_RESULTS) ? info.endCursor : undefined;

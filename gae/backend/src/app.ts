@@ -19,14 +19,20 @@ app.get("/hello", (req, res) => {
   res.send("Hello World!");
 });
 
-app.options("/add", cors());
 app.post("/add", async (req, res) => {
+  // tslint:disable-next-line:no-console
+  console.log(req.body);
   const id = await ContactStore.add(req.body as IContact);
   res.json({id});
 });
 
+const maxLimit = 50
+
 app.get("/list", async (req, res) => {
-  const [results, endCursor] = await ContactStore.list("", 10);
+  const { cursor, limit } = req.query;
+  const safeLimit = Math.min(parseInt(limit || maxLimit, 10), maxLimit);
+
+  const [results, endCursor] = await ContactStore.list(cursor, safeLimit);
   res.json({results, endCursor});
 });
 
