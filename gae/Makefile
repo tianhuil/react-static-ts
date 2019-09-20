@@ -11,6 +11,7 @@ backend: force
 
 frontend: force
 	# NB: the HOST is hard coded.  It's just here for documentation purposes
+	# NB: REACT_APP_BACKEND_HOST must start with REACT_APP_* to be transferred through react-static
 	cd frontend && REACT_APP_BACKEND_HOST=$(DEV_BACKEND_HOST) HOST=$(DEV_FRONTEND_HOST) npm start
 
 force:
