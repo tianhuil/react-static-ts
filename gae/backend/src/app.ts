@@ -12,10 +12,7 @@ const app: express.Application = express();
 app.use(express.json());
 
 if (process.env.NODE_ENV === "development") {
-  app.use((_, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    next();
-  });
+  app.use(cors());
 }
 
 app.get("/hello", (req, res) => {
