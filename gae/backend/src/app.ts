@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === "development") {
   app.use((_, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     next();
-  })
+  });
 }
 
 app.get("/hello", (req, res) => {
