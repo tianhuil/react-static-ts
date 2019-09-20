@@ -5,7 +5,7 @@ export default () => {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     const response = await axios.post(
-      'http://localhost:3001/add',
+      `http://${process.env.REACT_APP_BACKEND_HOST}/add`,
       new FormData(event.currentTarget),
       { headers: {'Content-Type': 'multipart/form-data' } }
     )
