@@ -20,8 +20,6 @@ app.get("/hello", (req, res) => {
 });
 
 app.post("/add", async (req, res) => {
-  // tslint:disable-next-line:no-console
-  console.log(req.body);
   const id = await ContactStore.add(req.body as IContact);
   res.json({id});
 });
@@ -29,6 +27,10 @@ app.post("/add", async (req, res) => {
 const maxLimit = 50
 
 app.get("/list", async (req, res) => {
+  if (req.query.token !== process.env.DEV_BACKEND_API_KEY) {
+    res.status(403).send("Need valid token");
+    return;
+  }
   const { cursor, limit } = req.query;
   const safeLimit = Math.min(parseInt(limit || maxLimit, 10), maxLimit);
 
