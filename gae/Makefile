@@ -22,3 +22,10 @@ frontend:
 		REACT_APP_BACKEND_HOST=$(DEV_BACKEND_HOST) \
 		HOST=$(DEV_FRONTEND_HOST) \
 		npm start
+
+test-backend:
+	cd backend && \
+		BACKEND_HOST=$(DEV_BACKEND_HOST) \
+		DATABASE_HOST=$(DEV_DATABASE_HOST) \
+		DEV_BACKEND_API_KEY=$(DEV_BACKEND_API_KEY) \
+		npm run test

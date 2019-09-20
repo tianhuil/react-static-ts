@@ -11,6 +11,8 @@ const port = host.split(":")[1];
 const app: express.Application = express();
 app.use(express.json());
 
+const contactStore = new ContactStore()
+
 if (process.env.NODE_ENV === "development") {
   app.use(cors());
 }
@@ -20,11 +22,11 @@ app.get("/hello", (req, res) => {
 });
 
 app.post("/add", async (req, res) => {
-  const id = await ContactStore.add(req.body as IContact);
+  const id = await contactStore.add(req.body as IContact);
   res.json({id});
 });
 
-const maxLimit = 50
+const maxLimit = 50;
 
 app.get("/list", async (req, res) => {
   if (req.query.token !== process.env.DEV_BACKEND_API_KEY) {
@@ -34,7 +36,7 @@ app.get("/list", async (req, res) => {
   const { cursor, limit } = req.query;
   const safeLimit = Math.min(parseInt(limit || maxLimit, 10), maxLimit);
 
-  const [results, endCursor] = await ContactStore.list(cursor, safeLimit);
+  const [results, endCursor] = await contactStore.list(cursor, safeLimit);
   res.json({results, endCursor});
 });
 
