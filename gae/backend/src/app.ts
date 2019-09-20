@@ -10,6 +10,12 @@ const port = host.split(":")[1];
 
 const app: express.Application = express();
 app.use(bodyParser.urlencoded({ extended: true }));
+if (process.env.NODE_ENV === "development") {
+  app.use((_, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    next();
+  })
+}
 
 app.get("/hello", (req, res) => {
   res.send("Hello World!");
@@ -17,7 +23,6 @@ app.get("/hello", (req, res) => {
 
 app.post("/add", async (req, res) => {
   const id = await ContactStore.add(req.body as IContact);
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   res.json({id});
 });
 

@@ -49,10 +49,13 @@ if (host === undefined) {
 var port = host.split(":")[1];
 var app = express_1.default();
 app.use(body_parser_1.default.urlencoded({ extended: true }));
+if (process.env.NODE_ENV === "development") {
+    app.use(function (_, res) { return res.header("Access-Control-Allow-Origin", "*"); });
+}
 app.get("/hello", function (req, res) {
     res.send("Hello World!");
 });
-app.post("/api/add", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+app.post("/add", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var id;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -64,7 +67,7 @@ app.post("/api/add", function (req, res) { return __awaiter(void 0, void 0, void
         }
     });
 }); });
-app.get("/api/list", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+app.get("/list", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, results, endCursor;
     return __generator(this, function (_b) {
         switch (_b.label) {
