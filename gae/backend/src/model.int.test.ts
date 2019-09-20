@@ -7,9 +7,9 @@ const contactStore = new ContactStore(kind);
 async function clearAll() {
   const query = datastore.createQuery([kind])
                       .limit(100)
-                      .select("__key__")
+                      .select("__key__");
   const [results, _] = await datastore.runQuery(query);
-  datastore.delete(results.map((r) => r[datastore.KEY]))
+  datastore.delete(results.map((r) => r[datastore.KEY]));
 }
 
 test("Check can add to database", async () => {
