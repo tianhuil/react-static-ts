@@ -35,51 +35,48 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var body_parser_1 = __importDefault(require("body-parser"));
-var express_1 = __importDefault(require("express"));
-var model_1 = require("./model");
-var host = process.env.BACKEND_HOST;
-if (host === undefined) {
-    throw new Error("Ned to set environment variable");
-}
-var port = host.split(":")[1];
-var app = express_1.default();
-app.use(body_parser_1.default.urlencoded({ extended: true }));
-app.get("/hello", function (req, res) {
-    res.send("Hello World!");
-});
-app.post("/api/add", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, model_1.ContactStore.add(req.body)];
-            case 1:
-                id = _a.sent();
-                res.json({ id: id });
-                return [2 /*return*/];
-        }
-    });
-}); });
-app.get("/api/list", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, results, endCursor;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0: return [4 /*yield*/, model_1.ContactStore.list("", 10)];
-            case 1:
-                _a = _b.sent(), results = _a[0], endCursor = _a[1];
-                res.json({ results: results, endCursor: endCursor });
-                return [2 /*return*/];
-        }
-    });
-}); });
-app.use(function (req, res, next) {
-    res.status(404).send("No endpoint found!");
-});
-app.listen(port, function () {
-    // tslint:disable-next-line:no-console
-    console.log("Listening on port " + port);
-});
+var datastore_1 = require("@google-cloud/datastore");
+var datastore = new datastore_1.Datastore({ apiEndpoint: process.env.DATABASE_HOST });
+var kind = "Contact";
+exports.ContactStore = {
+    add: function (contact) {
+        return __awaiter(this, void 0, void 0, function () {
+            var key;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        key = datastore.key([kind, Date.now()]);
+                        return [4 /*yield*/, datastore.save({
+                                data: contact,
+                                key: key,
+                            })];
+                    case 1:
+                        _a.sent();
+                        if (!key.id) {
+                            throw Error("Invalid Key at Contact Add");
+                        }
+                        return [2 /*return*/, key.id];
+                }
+            });
+        });
+    },
+    list: function (token, limit) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, _a, results, info, nextCursor;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        query = datastore.creaeQuery([kind])
+                            .limit(limit)
+                            .start(token);
+                        return [4 /*yield*/, datastore.runQuery(query)];
+                    case 1:
+                        _a = _b.sent(), results = _a[0], info = _a[1];
+                        nextCursor = (info.moreResults !== datastore_1.Datastore.NO_MORE_RESULTS) ? info.endCursor : undefined;
+                        return [2 /*return*/, [results, nextCursor]];
+                }
+            });
+        });
+    },
+};

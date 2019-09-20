@@ -1,14 +1,36 @@
+import bodyParser from "body-parser";
 import express from "express";
+import { ContactStore, IContact } from "./model";
 
-const PORT = 3001;
+const host = process.env.BACKEND_HOST;
+if (host === undefined) {
+    throw new Error("Ned to set environment variable");
+}
+const port = host.split(":")[1];
 
 const app: express.Application = express();
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-    res.send("Hello World");
+app.get("/hello", (req, res) => {
+    res.send("Hello World!");
 });
 
-app.listen(PORT, () => {
+app.post("/add", async (req, res) => {
+    const id = await ContactStore.add(req.body as IContact);
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.json({id});
+});
+
+app.get("/list", async (req, res) => {
+    const [results, endCursor] = await ContactStore.list("", 10);
+    res.json({results, endCursor});
+});
+
+app.use((req, res, next) => {
+    res.status(404).send("No endpoint found!");
+});
+
+app.listen(port, () => {
     // tslint:disable-next-line:no-console
-    console.log(`Listening on port ${PORT}`);
+    console.log(`Listening on port ${port}`);
 });
