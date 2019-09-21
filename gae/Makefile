@@ -29,3 +29,10 @@ test-backend:
 		DATABASE_HOST=$(DEV_DATABASE_HOST) \
 		DEV_BACKEND_API_KEY=$(DEV_BACKEND_API_KEY) \
 		npm run test
+
+test-datastore:
+	cd backend && \
+		BACKEND_HOST=$(DEV_BACKEND_HOST) \
+		DATABASE_HOST=$(DEV_DATABASE_HOST) \
+		DEV_BACKEND_API_KEY=$(DEV_BACKEND_API_KEY) \
+		npx jest src/datastore.int.test.js
