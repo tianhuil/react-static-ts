@@ -57,7 +57,18 @@ async function runPageQuery2(pageCursor) {
   return [entities, info];
 }
 
-test('test datastore', async () => {
+test('test datastore pagination fail', async () => {
+  await Promise.all(['a', 'b', 'c'].map((c, i) => datastore.save({
+    data: { c },
+    key: datastore.key([kind, i+1]),
+  })))
+
+  const [res, info] = await runPageQuery(null)
+  expect(res.length).toBe(3)
+  expect(info).toBeTruthy()
+})
+
+test('test datastore pagination succeed', async () => {
   await Promise.all(['a', 'b', 'c'].map((c, i) => datastore.save({
     data: { c },
     key: datastore.key([kind, i+1]),
