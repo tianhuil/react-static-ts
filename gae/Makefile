@@ -1,4 +1,4 @@
-.PHONY: database backend frontend
+.PHONY: database backend frontend db-viewer
 
 SHELL=bash
 include .env
@@ -29,6 +29,13 @@ test-backend:
 		DATABASE_HOST=$(DEV_DATABASE_HOST) \
 		DEV_BACKEND_API_KEY=$(DEV_BACKEND_API_KEY) \
 		npm run test
+
+db-viewer:
+	cd db-viewer && \
+		$(gcloud beta emulators datastore env-init) \
+		npx dsui -p $(DB_VIEWER_PORT) \
+			-r default \
+			-e $(DEV_DATABASE_HOST)
 
 test-datastore:
 	cd backend && \
