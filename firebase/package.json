@@ -30,7 +30,7 @@
     "@types/react-dom": "^16.8.5",
     "@types/react-hot-loader": "^4.1.0",
     "@types/webpack-env": "^1.14.0",
-    "firebase-admin": "^8.5.0",
+    "firebase-admin": "^11.4.1",
     "react-hot-loader": "^4.12.11",
     "serve": "^11.1.0",
     "typescript": "^3.5.3"
